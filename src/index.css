@@ -2,6 +2,7 @@
 
 body {
     display: flex;
+    background: #dde1e7;
     background-repeat: no-repeat;
     background-size: 100% 100%;
     min-height: 100vh;
@@ -10,27 +11,45 @@ body {
 }
 
 .main-container {
-    background-image: "url(../src/background.png)";
-    min-width: 80vh;
-    min-height: 80vh;
+    padding: 60px;
+    gap: 50px;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-    background-color: hsl(0, 0%, 100%);
+    background: #dde1e7;
     border-radius: 3%;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    box-shadow: -5px -5px 9px rgba(255, 255, 255, 0.45),
+        5px 5px 9px rgba(94, 104, 121, 0.3);
 }
-.main-heading {
-    font-size: 10;
+button {
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: large;
+    background: #dde1e7;
+    margin-top: 20px;
+    color: rgb(63, 63, 63);
+    height: 40px;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    box-shadow: -5px -5px 9px rgba(255, 255, 255, 0.45),
+        5px 5px 9px rgba(94, 104, 121, 0.3);
+    transition: 1s;
+}
+
+button:active {
+    box-shadow: inset -5px -5px 9px rgba(255, 255, 255, 0.45),
+        inset 5px 5px 9px rgba(94, 104, 121, 0.3);
 }
 .form-container {
     width: 360px;
-    background-color: #ffffff;
-    border-radius: 3%;
-    margin: auto;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    padding: 10px;
+    padding: 20px;
+    border-radius: 14px;
+    background: #dde1e7;
+    box-shadow: inset -5px -5px 9px rgba(255, 255, 255, 0.45),
+        inset 5px 5px 9px rgba(94, 104, 121, 0.3);
 }
 
 .register-form {
@@ -78,17 +97,6 @@ input {
     border: 2px solid #ffa4a4;
 }
 
-button {
-    background: #d580ff;
-    color: black;
-    border-radius: 5%;
-    cursor: pointer;
-}
-
-button:disabled {
-    cursor: default;
-}
-
 h1 {
     position: relative;
     padding: 0;
@@ -96,7 +104,7 @@ h1 {
     font-family: "Raleway", sans-serif;
     font-weight: 300;
     font-size: 40px;
-    color: #080808;
+    color: #414141;
     -webkit-transition: all 0.4s ease 0s;
     -o-transition: all 0.4s ease 0s;
     transition: all 0.4s ease 0s;
@@ -139,4 +147,8 @@ h1 em {
     left: 50%;
     margin-left: -50px;
     background-color: #b80000;
+}
+
+.main-heading {
+    font-size: 10;
 }
