@@ -135,32 +135,13 @@ export default function App() {
                         justifyContent={"center"}
                     >
                         {!isManMode && !showSuccess && (
-                            <Button
-                                variant="contained"
-                                className="form-field"
-                                onClick={onSubmit}
-                            >
-                                Submit
-                            </Button>
+                            <button onClick={onSubmit}>Submit</button>
                         )}
                         {isManMode && !showSuccess && (
-                            <Button variant="contained" onClick={onMan}>
-                                Submit
-                            </Button>
-                        )}
-                        {!showSuccess && (
-                            <Button
-                                variant="contained"
-                                divider={
-                                    <Divider orientation="vertical" flexItem />
-                                }
-                                className="form-field"
-                                onClick={() => setIsManMode(!isManMode)}
-                            >
-                                {isManMode ? "Automatic Mode" : "Manual Mode"}
-                            </Button>
+                            <button onClick={onMan}>Submit</button>
                         )}
                     </Stack>
+
                     {!isManMode && showSuccess && response !== 0 && (
                         <>
                             <div class="one">
@@ -187,7 +168,7 @@ export default function App() {
                                 <label
                                     id={"my-label"}
                                     style={{
-                                        color: "black",
+                                        color: "#414141",
                                         fontSize: "30px",
                                         textAlign: "center",
                                         width: "200px",
@@ -203,11 +184,10 @@ export default function App() {
                                     ) / 10000}
                                 </label>
                             </Donut>
-                            <Button variant="contained" onClick={apiCall1}>
-                                Submit
-                            </Button>
+                            <button onClick={apiCall1}>Submit</button>
                         </>
                     )}
+
                     {showSuccess && response === 0 && (
                         <div className={"item"}>
                             <Loader
@@ -220,6 +200,14 @@ export default function App() {
                     )}
                 </div>
             </div>
+            {!showSuccess && (
+                <button
+                    variant="contained"
+                    onClick={() => setIsManMode(!isManMode)}
+                >
+                    {isManMode ? "Automatic Mode" : "Manual Mode"}
+                </button>
+            )}
         </div>
     );
 }
