@@ -4,7 +4,9 @@ import "./index.css";
 import { Donut } from "react-dial-knob";
 import Loader from "react-js-loader";
 import { TextField, Button, Stack, Divider, Box } from "@mui/material";
+import dummy_response from "./dummy.json";
 
+var backendUrl = `http://127.0.0.1:8000`;
 export default function App() {
     const [value, setValue] = React.useState(5);
     var data = [];
@@ -15,12 +17,15 @@ export default function App() {
     const [temperature, setTemperature] = useState();
     const [isMinValid, setIsMinValid] = useState(true);
     const [isManMode, setIsManMode] = useState(false);
-    const [response, setResponse] = useState(0);
+    const [response, setResponse] = useState(dummy_response);
+    const plot = `${backendUrl}/${
+        response["adam_output"][10 - value].plot_location
+    }`;
     const [isMaxValid, setIsMaxValid] = useState(true);
     const [isTempValid, setIsTempValid] = useState(true);
     const [showSuccess, setShowSuccess] = useState(false);
-    var baseURL = `http://127.0.0.1:8000/adam?tmin=${minimumComfortTemperature}&tset=${temperature}&tmax=${maximumComfortTemperature}`;
-    var baseURLPost = `http://127.0.0.1:8000/select_alpha`;
+    var baseURL = `${backendUrl}/adam?tmin=${minimumComfortTemperature}&tset=${temperature}&tmax=${maximumComfortTemperature}`;
+    var baseURLPost = `${backendUrl}/select_alpha`;
     const onSubmit = () => {
         if (minimumComfortTemperature === undefined) {
             setIsMinValid(false);
@@ -35,16 +40,16 @@ export default function App() {
             return;
         }
         setShowSuccess(true);
-        apiCall();
+        adamApiCall();
     };
-    const apiCall = async () => {
+    const adamApiCall = async () => {
         const res = await axios.get(baseURL);
         setResponse(res.data);
     };
 
-    const apiCall1 = async () => {
+    const setAlphaApiCall = async () => {
         setShowSuccess(true);
-        setResponse(0);
+        setResponse(dummy_response);
         const res = await axios.post(baseURLPost, {
             tmin: minimumComfortTemperature,
             tmax: maximumComfortTemperature,
@@ -76,9 +81,8 @@ export default function App() {
                             id="outlined-basic"
                             label="Minimum Acceptable Temperature"
                             variant="outlined"
-                            className="form-field"
-                            type="number"
                             name="field7"
+                            value={minimumComfortTemperature}
                             onChange={(e) => {
                                 setIsMinValid(true);
                                 setMinimumComfortTemperature(e.target.value);
@@ -96,9 +100,8 @@ export default function App() {
                             id="outlined-basic"
                             label="Desired Temperature"
                             variant="outlined"
-                            className="form-field"
-                            type="number"
                             name="field8"
+                            value={temperature}
                             onChange={(e) => {
                                 setIsTempValid(true);
                                 setTemperature(e.target.value);
@@ -114,10 +117,8 @@ export default function App() {
                         <TextField
                             id="outlined-basic"
                             label="Maximum Acceptable Temperature"
-                            variant="outlined"
-                            className="form-field"
-                            type="number"
                             name="field8"
+                            value={maximumComfortTemperature}
                             onChange={(e) => {
                                 setIsMaxValid(true);
                                 setMaximumComfortTemperature(e.target.value);
@@ -142,53 +143,62 @@ export default function App() {
                         )}
                     </Stack>
 
-                    {!isManMode && showSuccess && response !== 0 && (
-                        <>
-                            <div class="one">
-                                <h1>Comfort Level</h1>
+                    {!isManMode &&
+                        showSuccess &&
+                        response !== dummy_response && (
+                            <div className="donut-box">
+                                <>
+                                    <div class="one">
+                                        <h1>Comfort Level</h1>
+                                    </div>
+                                    <Donut
+                                        diameter={200}
+                                        min={0}
+                                        max={10}
+                                        step={1}
+                                        value={value}
+                                        theme={{
+                                            donutColor: "#414141",
+                                        }}
+                                        style={{
+                                            position: "relative",
+                                            margin: "15px auto",
+                                            width: "200px",
+                                        }}
+                                        onValueChange={setValue}
+                                        ariaLabelledBy={"my-label"}
+                                        spaceMaxFromZero={false}
+                                    >
+                                        <label
+                                            id={"my-label"}
+                                            style={{
+                                                color: "#414141",
+                                                fontSize: "30px",
+                                                textAlign: "center",
+                                                width: "200px",
+                                                display: "block",
+                                                paddingTop: "30px",
+                                                padding: "10px 10px",
+                                            }}
+                                        >
+                                            Price - ₹{" "}
+                                            {Math.trunc(
+                                                Math.round(
+                                                    response["adam_output"][
+                                                        10 - value
+                                                    ].overall_price * 10000
+                                                ) / 10000
+                                            )}
+                                        </label>
+                                    </Donut>
+                                    <button onClick={setAlphaApiCall}>
+                                        Submit
+                                    </button>
+                                </>
                             </div>
-                            <Donut
-                                diameter={200}
-                                min={0}
-                                max={10}
-                                step={1}
-                                value={value}
-                                theme={{
-                                    donutColor: "Violet",
-                                }}
-                                style={{
-                                    position: "relative",
-                                    margin: "15px auto",
-                                    width: "200px",
-                                }}
-                                onValueChange={setValue}
-                                ariaLabelledBy={"my-label"}
-                                spaceMaxFromZero={false}
-                            >
-                                <label
-                                    id={"my-label"}
-                                    style={{
-                                        color: "#414141",
-                                        fontSize: "30px",
-                                        textAlign: "center",
-                                        width: "200px",
-                                        display: "block",
-                                        paddingTop: "30px",
-                                        padding: "10px 10px",
-                                    }}
-                                >
-                                    Price - ₹{" "}
-                                    {Math.round(
-                                        response["adam_output"][10 - value]
-                                            .overall_price * 10000
-                                    ) / 10000}
-                                </label>
-                            </Donut>
-                            <button onClick={apiCall1}>Submit</button>
-                        </>
-                    )}
+                        )}
 
-                    {showSuccess && response === 0 && (
+                    {showSuccess && response === dummy_response && (
                         <div className={"item"}>
                             <Loader
                                 type="spinner-cub"
@@ -199,6 +209,11 @@ export default function App() {
                         </div>
                     )}
                 </div>
+                {!isManMode && showSuccess && response !== dummy_response && (
+                    <div className="img-container">
+                        {<img className="plot-img" src={plot}></img>}
+                    </div>
+                )}
             </div>
             {!showSuccess && (
                 <button
