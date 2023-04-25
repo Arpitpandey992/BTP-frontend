@@ -24,8 +24,8 @@ export default function App() {
     const [isMaxValid, setIsMaxValid] = useState(true);
     const [isTempValid, setIsTempValid] = useState(true);
     const [showSuccess, setShowSuccess] = useState(false);
-    var baseURL = `${backendUrl}/adam?tmin=${minimumComfortTemperature}&tset=${temperature}&tmax=${maximumComfortTemperature}`;
-    var baseURLPost = `${backendUrl}/select_alpha`;
+    var adamApiUrl = `${backendUrl}/adam?tmin=${minimumComfortTemperature}&tset=${temperature}&tmax=${maximumComfortTemperature}`;
+    var selectAlphaApiUrl = `${backendUrl}/select_alpha`;
     const onSubmit = () => {
         if (minimumComfortTemperature === undefined) {
             setIsMinValid(false);
@@ -43,14 +43,14 @@ export default function App() {
         adamApiCall();
     };
     const adamApiCall = async () => {
-        const res = await axios.get(baseURL);
+        const res = await axios.get(adamApiUrl);
         setResponse(res.data);
     };
 
     const setAlphaApiCall = async () => {
         setShowSuccess(true);
         setResponse(dummy_response);
-        const res = await axios.post(baseURLPost, {
+        const res = await axios.post(selectAlphaApiUrl, {
             tmin: minimumComfortTemperature,
             tmax: maximumComfortTemperature,
             tset: temperature,
@@ -64,10 +64,13 @@ export default function App() {
             return;
         }
         setShowSuccess(true);
-        setResponse(0);
-        const res = await axios.post(baseURLPost, {
+        setResponse(dummy_response);
+        const res = await axios.post(selectAlphaApiUrl, {
             tset: temperature,
+            tmax: temperature,
+            tmin: temperature,
             alpha: 0,
+            manual_mode: true,
         });
         setShowSuccess(false);
     };
