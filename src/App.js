@@ -3,13 +3,12 @@ import axios from "axios";
 import "./index.css";
 import { Donut } from "react-dial-knob";
 import Loader from "react-js-loader";
-import { TextField, Button, Stack, Divider, Box } from "@mui/material";
+import { TextField, Stack } from "@mui/material";
 import dummy_response from "./dummy.json";
 
 var backendUrl = `http://127.0.0.1:8000`;
 export default function App() {
     const [value, setValue] = React.useState(5);
-    var data = [];
     const [minimumComfortTemperature, setMinimumComfortTemperature] =
         useState();
     const [maximumComfortTemperature, setMaximumComfortTemperature] =
@@ -50,7 +49,7 @@ export default function App() {
     const setAlphaApiCall = async () => {
         setShowSuccess(true);
         setResponse(dummy_response);
-        const res = await axios.post(selectAlphaApiUrl, {
+        await axios.post(selectAlphaApiUrl, {
             tmin: minimumComfortTemperature,
             tmax: maximumComfortTemperature,
             tset: temperature,
@@ -65,7 +64,7 @@ export default function App() {
         }
         setShowSuccess(true);
         setResponse(dummy_response);
-        const res = await axios.post(selectAlphaApiUrl, {
+        await axios.post(selectAlphaApiUrl, {
             tset: temperature,
             tmax: temperature,
             tmin: temperature,
@@ -214,7 +213,7 @@ export default function App() {
                 </div>
                 {!isManMode && showSuccess && response !== dummy_response && (
                     <div className="img-container">
-                        {<img className="plot-img" src={plot}></img>}
+                        {<img className="plot-img" src={plot} alt="plot"></img>}
                     </div>
                 )}
             </div>
